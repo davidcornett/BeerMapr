@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Beer Mapr</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+
+      <form action="{{ url_for('root') }}" method='post'>
+        <h3> Step 1: Get Location </h3>
+        <fieldset id="location">
+            <Strong>Use 1 of 2 location methods:</Strong><br>
+            <input type="button" class="submit" id="autoLocate" value="Press for location">
+            <br> or <br>
+            <label for="zip">Enter Zip Code</label>
+            <input type="number" id="zip" name="zip" step="1">	
+        </fieldset>
+
+        <h3> Step 2: Set Max Range</h3>
+        <label for="maxRange">Enter maximum distance to search for breweries (miles)</label>
+        <input type="number" id="range" name="range" step="1">	
+        <li> Up to 30 miles</li>
+
+        <h3> Step 3 (optional): Filter Results </h3>
+        <label for="breweryType">Optional: filter by brewery type:</label>
+        <select name="breweryType" class="breweryType">
+            <option value="None">--Select one--</option>  
+            <option value="Microbrewery">Microbrewery</option>
+            <option value="Brewpub">Brewpub</option>
+            <option value="RegionalBrewery">Regional Brewery</option>
+        </select>
+        
+        <h3> Step 4: Find Breweries </h3>
+        <input id="submitForm" type="submit" value="Go" />
+
+    </form>
+    <br>
+    <form action="{{ url_for('root') }}" method='get'>
+      <h3>Start Over</h3>
+      <input id="resetForm" type="submit" value="Quick reset" />
+    </form>
+
+    <br>
+    Click here to learn more: About This Tool
+
+  </body>
+</html>
