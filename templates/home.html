@@ -19,15 +19,17 @@
         <h3> Step 2: Set Max Range</h3>
         <label for="maxRange">Enter maximum distance to search for breweries (miles)</label>
         <input type="number" id="range" name="range" step="1">	
+        <li> Walking, biking, or taking a car-share?  Customize the range for breweries accessible to you.</li>
         <li> Up to 30 miles</li>
+        <li> Warning: high ranges may return up to 50 breweries in urban areas</li>
 
         <h3> Step 3 (optional): Filter Results </h3>
         <label for="breweryType">Optional: filter by brewery type:</label>
         <select name="breweryType" class="breweryType">
-            <option value="None">--Select one--</option>  
+            <option value="ALL">No Filter: show all</option>  
             <option value="Microbrewery">Microbrewery</option>
             <option value="Brewpub">Brewpub</option>
-            <option value="RegionalBrewery">Regional Brewery</option>
+            <option value="Regional">Regional Brewery</option>
         </select>
         
         <h3> Step 4: Find Breweries </h3>

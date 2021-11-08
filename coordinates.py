@@ -4,12 +4,13 @@
 from os import X_OK
 import pgeocode
 import json
+from haversine import haversine, Unit
 
 class Location:
     def __init__(self, zip_code, x_cord=None, y_cord=None):
-        if x_cord is None or y_cord is None:  # if we don't already have coordinates, we must look them  up
-            self.zip_code = zip_code[:5]  # zip codes must be 5-digit only, slice removes longer zip codes
+        self.zip_code = zip_code[:5]  # zip codes must be 5-digit only, slice removes longer zip codes
 
+        if x_cord is None or y_cord is None:  # if we don't already have coordinates, we must look them  up
             # get coordinates data via pgeocode library
             nomi = pgeocode.Nominatim('US')
             query = nomi.query_postal_code(self.zip_code).to_json()
@@ -29,19 +30,14 @@ class Location:
     def get_y(self):
         return self.y
 
+    def get_zip(self):
+        return self.zip_code
 
-    def calc_distance(comparison_location: object) -> float:
+    def calc_distance(self, comparison_location: object) -> float:
         """
-        calculates miles between latitude/longitude coordinates
-        Note: this simple implementation assumes a flat plane.  This is accurate enough for the limited range of brewery searches supported by
-        beermapr.  Greater search radii will need an implementation taking into account Earth's spherical nature. See 'Great Circle' algorithm.
+        calculates miles between latitude/longitude coordinates.
         """
-        return 5
+        loc1 = (float(comparison_location.get_y()), float(comparison_location.get_x()))
+        loc2 = (float(self.get_y()), float(self.get_x()))
+        return haversine(loc1, loc2, unit=Unit.MILES)
 
-    """
-    def get_gps(self, zip_code: str) -> str:
-        nomi = pgeocode.Nominatim('US')
-        query = nomi.query_postal_code(zip_code).to_json()
-        dict = json.loads(query)
-        return [str(dict['longitude']), str(dict['latitude'])]
-    """

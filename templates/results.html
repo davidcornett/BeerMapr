@@ -3,14 +3,23 @@
   <head>
     <title>Beer Mapr</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='beermapr.css') }}">
   </head>
   <body>
 
+    <form action="{{ url_for('root') }}" method='get'>
+        <h3>Go Back to Search Page:</h3>
+        <input id="resetForm" type="submit" value="Run New Search" />
+    </form>
 
+    <H3>Showing <span class= 'dynamicResults'>{{ filter }} </span> results within <span class='dynamicResults'>{{ range }}</span> miles of {{ zip_code }} </H3>
     <table id='results'>
         <thead>
             <tr>Brewery</tr>
             <tr>Type</tr>
+            <tr>Distance (miles)</tr>
+            <tr>URL</tr>
+            <tr>Summary</tr>
 
         </thead>
         <tbody>
@@ -18,6 +27,9 @@
                 <tr>
                     <td>{{r.get_name()}}</td>
                     <td>{{r.get_type()}}</td>
+                    <td>{{r.get_distance()}}</td>
+                    <td>{{r.get_url()}}</td>
+                    <td>{{r.get_wiki_summary()}}</td>
                 </tr>
             {% endfor %}
         </tbody>
