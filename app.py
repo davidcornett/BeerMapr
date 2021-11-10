@@ -19,12 +19,18 @@ def root():
     def get_beer():
         # gets JSON for random beer from Robert Baucus's microservice
         response = requests.get('http://127.0.0.1:42001')
-        beer = response.json()
-        return beer
+        return response.json()
+
+    def process_name(name: str) -> str:
+        # returns string with title case and underscores replaced with blank spaces
+        return name.replace('_', ' ').title()
+        
     beer = get_beer()
-    print(beer)
+    beer_title = process_name(beer['beer_image'][0])
+    beer_image = beer['beer_image'][1]
+    beer_descript = beer['beer_description'][1]
     
-    return render_template("home.html")
+    return render_template("home.html", beerTitle=beer_title, beer=beer_image, beerDescript=beer_descript)
 
 @app.route('/results', methods=['POST'])
 def get_results():
@@ -43,7 +49,7 @@ def get_results():
     user_location = Location(zip_code)
     area = Map(user_location)
 
-    """production version
+    #production version
     # get the 20 closest breweries to coordinates
     data = requests.get('https://api.openbrewerydb.org/breweries?by_dist='+user_location.get_y()+','+user_location.get_x()+'&per_page=20')
     breweries = json.loads(data.text)  # convert object to json
@@ -53,6 +59,7 @@ def get_results():
     breweries = json.load(f)
     f.close()
     #------------------------------------------------------
+    """
 
     def process_type(type: str) -> str:
         return "Microbrewery" if type == 'micro' else type.title()
@@ -76,12 +83,20 @@ def get_results():
 
 @app.route('/test')
 def test():
-    def get_wiki_summary():
-        attraction = 'Empire_State_Building'
+    def get_wiki_summary(attraction: str):
+        """
+        Returns JSON containing wikipedia summary test for your desired attraction
+        Takes any string - process_string() ensures title case and blank spaces will be processed
+        """
+
+        def process_string(string: str) -> str:
+            new_string = string.title()  # capitalize all words (some wiki entries are case sensitive)
+            return new_string.replace(' ', '_')  # return string with blank spaces replaced with underscores
+        attraction = process_string(attraction)  # process attraction's name to work with wikipedia search
+
         # gets JSON containing wikipedia summary for URL parameter
         response = requests.get('http://127.0.0.1:9999/'+attraction)
-        #response = requests.get('http://127.0.0.1:9999/Empire_State_Building')
-        wiki_summary = response.json()
+        wiki_summary = response.json()  # conver to JSON
         return wiki_summary
 
     #response = requests.get('https://api.github.com')

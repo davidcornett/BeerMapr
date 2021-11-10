@@ -3,7 +3,7 @@
   <head>
     <title>Beer Mapr</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='beermapr.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='results.css') }}">
   </head>
   <body>
 
@@ -15,11 +15,14 @@
     <H3>Showing <span class= 'dynamicResults'>{{ filter }} </span> results within <span class='dynamicResults'>{{ range }}</span> miles of {{ zip_code }} </H3>
     <table id='results'>
         <thead>
-            <tr>Brewery</tr>
-            <tr>Type</tr>
-            <tr>Distance (miles)</tr>
-            <tr>URL</tr>
-            <tr>Summary</tr>
+            <tr>
+              <th>Brewery</th>
+              <th>Type</th>
+              <th>Distance (miles)</th>
+              <th>URL</th>
+              <th>Summary</th>
+            </tr>
+
 
         </thead>
         <tbody>
@@ -33,10 +36,7 @@
                 </tr>
             {% endfor %}
         </tbody>
-
-
     </table>
-
 
 
   </body>

@@ -1,3 +1,73 @@
-.dynamicResults {
-    color: #34568B;
+
+
+body {
+    background-color: black;
+    color: #fff;
+    font: 16px/26px
+     sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: 700px 1fr 1fr;
+    grid-auto-rows: 100px; 
+    /* grid-auto-rows: minmax(75px, auto); */
+    column-gap: 100px;
+    row-gap: 1em;
+    
+  }
+
+.box1 {
+    display: grid;
+    grid-column-start: 1; 
+    grid-column-end: 1;
+}
+
+.formWrapper {
+    padding: 10px;
+    border-radius: 3px 3px 3px 3px;
+}
+
+.box1 fieldset {
+    background-color: #003366;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    border: none;
+}
+
+.box1 form .submit {
+    width: 20%;
+    background-color: orange;
+}
+
+.box2 {
+    display: grid;
+    grid-column-start: 2; 
+    grid-column-end: 2;
+
+}
+#gpsSection {
+    display: none;
+}
+
+
+#beer {
+    max-width: 90%;
+    /* The position of the element is set relative to its original position: */
+    position: relative;
+    /* Center horizontally: */
+    margin: auto;
+    
+
+}
+
+#text {
+    max-width: 400px;
+}
+
+#beerTitle {
+    width: 400px;
+
 }
