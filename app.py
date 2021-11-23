@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
 import os
 import requests
 from coordinates import Location
@@ -7,7 +7,6 @@ from map import Map
 import json
 from haversine import haversine, Unit
 
-import pgeocode
 
 from flask.templating import render_template
 app = Flask(__name__)
@@ -24,7 +23,8 @@ def root():
     def process_name(name: str) -> str:
         # returns string with title case and underscores replaced with blank spaces
         return name.replace('_', ' ').title()
-        
+    
+    # Gets beer name, image, and description from microservice for display on page
     beer = get_beer()
     beer_title = process_name(beer['beer_image'][0])
     beer_image = beer['beer_image'][1]
@@ -34,36 +34,41 @@ def root():
 
 @app.route('/results', methods=['POST'])
 def get_results():
-
+    
     zip_code = request.form['zip']
+    gps = request.form['gps']
     range = request.form['range']
     filter = request.form['breweryType']
 
-    # convert range from str to int, with default of 30 used if blank
-    try:
-        range = int(range)
-    except:
-        range = 30
+    # create and validate user location that has latitude/longitude
+    user_location = Location(zip_code) # creates Location object for user
+    if not user_location.get_is_valid():
+        return redirect('/home')
 
-    # create user location that has latitude/longitude
-    user_location = Location(zip_code)
-    area = Map(user_location)
+    area = Map(user_location, range) # creates Map object which will hold user's location, and list of selected breweries.
+    range = area.get_range()  # creation of range also validates it in get_range() method
 
-    #production version
+    # PRODUCTION version
     # get the 20 closest breweries to coordinates
     data = requests.get('https://api.openbrewerydb.org/breweries?by_dist='+user_location.get_y()+','+user_location.get_x()+'&per_page=20')
     breweries = json.loads(data.text)  # convert object to json
-    """
-    # test version----------------------------------------
+    """ ---------------------------------------------------
+    # TEST version, does not use API 
     f = open('breweries.json')
     breweries = json.load(f)
     f.close()
-    #------------------------------------------------------
+    ------------------------------------------------------
     """
-
     def process_type(type: str) -> str:
+        # Converts to title case and improves clarity of a brewery category name
         return "Microbrewery" if type == 'micro' else type.title()
 
+    """ LOOP:
+    Creates Location object for each brewery, and a Brewery object which holds that location and other brewery info such as 
+    brewery type and URL. Each brewery's distance from user is calculated using a method called from the user's Location object.
+    If each brewery's distance is within the user's established range, and meets any filter requirements, the brewey is selected.
+    Finally, that brewery is appended to the Map object.
+    """
     for brewery in breweries:
         brewery_location = Location(brewery['postal_code'], brewery['longitude'], brewery['latitude'])
         new_brewery = Brewery(brewery['name'], process_type(brewery['brewery_type']), brewery_location, brewery['website_url'])
@@ -75,11 +80,12 @@ def get_results():
                 new_brewery.select()
 
         area.add_brewery(new_brewery)
-        #print(new_brewery.get_distance()-int(range))
 
-    area.select_breweries()  # creates list of selected breweries to display to the user
+    # Load selected breweries into a list for display to the user, and get any wiki summaries available for those breweries.
+    area.select_breweries() 
     area.set_wiki_summaries()
-    return render_template('results.html', results=area.get_selected_breweries(), zip_code=user_location.get_zip(), range=range, filter=filter)
+    return render_template('results.html', results=area.get_selected_breweries(), zip_code=user_location.get_zip(), range=area.get_range(), filter=filter)
+
 
 @app.route('/test')
 def test():

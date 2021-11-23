@@ -11,10 +11,8 @@
         
         <h1>Beer Mapr</h1>
         Find breweries close to your travel destination.
-
-          <div class='formWrapper'>
+        <div class='formWrapper'>
           <form action="{{ url_for('get_results') }}" method='post'>
-            <div class='formSection'>
             <fieldset>
               <h3> Step 1: Get Location </h3>
               <fieldset id="location">
@@ -31,21 +29,18 @@
                   </div>
               </fieldset>
             </fieldset>
-            </div>
 
 
-            <div class='formSection'>
               <fieldset>
               <h3> Step 2: Set Max Range</h3>
               <label for="maxRange">Enter maximum distance to search for breweries (miles)</label>
               <input type="number" id="range" name="range" step="1">	
               <li> Walking, biking, or taking a car-share?  Customize the range for breweries accessible to you.</li>
               <li> Up to 30 miles</li>
-              <li> Warning: high ranges may return up to 50 breweries in urban areas</li>
-            </fieldset>
-            </div>
+              <li> Warning: a maximum of 20 breweries will be shown, regardless of set range</li>
+              </fieldset>
 
-            <div class='formSection'>
+
               <fieldset>
               <h3> Step 3 (optional): Filter Results </h3>
               <label for="breweryType">Optional: filter by brewery type:</label>
@@ -55,15 +50,12 @@
                   <option value="Brewpub">Brewpub</option>
                   <option value="Regional">Regional Brewery</option>
               </select>
-            </fieldset>
-            </div>
+              </fieldset>
             
-            <div class='formSection'>
               <fieldset>
               <h3> Step 4: Find Breweries </h3>
               <input id="submitForm" type="submit" class="submit" value="Go" />
               </fieldset>
-            </div>
           </form>
           
           <br>
