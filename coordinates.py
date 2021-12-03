@@ -7,14 +7,15 @@ import json
 from haversine import haversine, Unit
 
 class Location:
-    def __init__(self, zip_code, x_cord=None, y_cord=None):
+    def __init__(self, zip_code, x_coord=None, y_coord=None):
         self.zip_code = zip_code[:5]  # zip codes must be 5-digit only, slice removes longer zip codes
         self.is_valid = True
 
-        if self.zip_code == '':
+        # Location needs either zip code or coords
+        if self.zip_code == '' and (x_coord is None or y_coord is None):
             self.is_valid = False
 
-        if x_cord is None or y_cord is None:  # if we don't already have coordinates, we must look them  up
+        if x_coord is None or y_coord is None:  # if we don't already have coordinates, we must look them up
             # get coordinates data via pgeocode library
             nomi = pgeocode.Nominatim('US')
             query = nomi.query_postal_code(self.zip_code).to_json()
@@ -24,8 +25,26 @@ class Location:
             self.x = str(location_dict['longitude'])
             self.y = str(location_dict['latitude'])
         else:
-            self.x = x_cord
-            self.y = y_cord
+            self.x = x_coord
+            self.y = y_coord
+
+    def process_x(self, x: str) -> str:
+        output = ''
+        switch = False
+        for char in x:
+            if char == ',':
+                switch = True
+            else:
+                if switch is True:
+                    output += char
+        return output
+
+    def process_y(self, y: str) -> str:
+        output = ''
+        for char in y:
+            if char == ',':
+                return output
+            output += char
 
     def get_x(self) -> str:
         # longitude

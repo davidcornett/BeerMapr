@@ -4,8 +4,8 @@ import wikipedia
 class Map:
     def __init__(self, user_location, range):
         self.user_location = user_location  # holds location object of user
-        self.brewery_list = []  # holds  brewery objects processed from  OpenBreweryDB - removes need to re-query if user tweaks range/filter
-        self.selected_breweries = []   # holds BY DISTANCE list of brewery objects meeting user's range and filter criteria (if applicable)
+        self.brewery_list = []  # brewery objects processed from OpenBreweryDB
+        self.selected_breweries = []   # BY-DISTANCE list of brewery objects meeting user's criteria
         self.max_range = 30
         self.range = self.set_range(range)
 
