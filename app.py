@@ -46,6 +46,7 @@ def get_results():
         return "Microbrewery" if type == 'micro' else type.title()
 
     def process_gps(coords: str) -> list:
+        # split string into 2, separated by comma
         lat = ''
         lon = ''
         cur = 1
@@ -82,7 +83,7 @@ def get_results():
     Finally, that brewery is appended to the Map object.
     """
     for brewery in breweries:
-        brewery_location = Location(brewery['postal_code'], brewery['longitude'], brewery['latitude'])
+        brewery_location = Location(brewery['postal_code'], brewery['latitude'], brewery['longitude'])
         new_brewery = Brewery(brewery['name'], process_type(brewery['brewery_type']), brewery_location, brewery['website_url'])
         distance = user_location.calc_distance(new_brewery.get_location())
         new_brewery.set_distance(round(distance, 2))
@@ -96,7 +97,13 @@ def get_results():
     # Load selected breweries into a list for display to the user, and get any wiki summaries available for those breweries.
     area.select_breweries() 
     area.set_wiki_summaries()
-    return render_template('results.html', results=area.get_selected_breweries(), zip_code=user_location.get_zip(), 
+
+    if gps == "":
+        searched_loc = user_location.get_zip()
+    else:
+        searched_loc = "your location"
+
+    return render_template('results.html', results=area.get_selected_breweries(), user_loc=searched_loc, 
      range=area.get_range(), filter=filter)
 
 if __name__ == '__main__':

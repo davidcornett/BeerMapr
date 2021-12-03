@@ -7,7 +7,7 @@ import json
 from haversine import haversine, Unit
 
 class Location:
-    def __init__(self, zip_code, x_coord=None, y_coord=None):
+    def __init__(self, zip_code, y_coord=None, x_coord=None):
         self.zip_code = zip_code[:5]  # zip codes must be 5-digit only, slice removes longer zip codes
         self.is_valid = True
 
@@ -28,24 +28,6 @@ class Location:
             self.x = x_coord
             self.y = y_coord
 
-    def process_x(self, x: str) -> str:
-        output = ''
-        switch = False
-        for char in x:
-            if char == ',':
-                switch = True
-            else:
-                if switch is True:
-                    output += char
-        return output
-
-    def process_y(self, y: str) -> str:
-        output = ''
-        for char in y:
-            if char == ',':
-                return output
-            output += char
-
     def get_x(self) -> str:
         # longitude
         return self.x 
@@ -62,8 +44,8 @@ class Location:
         calculates miles between latitude/longitude coordinates 
         Must revieve another location object as parameter
         """
-        loc1 = (float(comparison_location.get_y()), float(comparison_location.get_x()))
-        loc2 = (float(self.get_y()), float(self.get_x()))
+        loc1 = [float(comparison_location.get_x()), float(comparison_location.get_y())]
+        loc2 = [float(self.get_x()), float(self.get_y())]
         return haversine(loc1, loc2, unit=Unit.MILES)
     
     def get_is_valid(self) -> bool:
